@@ -1,0 +1,378 @@
+
+
+/* Search Bar */
+.search-container {
+    margin-bottom: 16px;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input::placeholder {
+    color: #9ca3af;
+}
+
+.table-container {
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 8px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  overflow-x: auto; /* Fallback for older browsers */
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+th {
+  background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  position: relative;
+}
+
+th.sortable {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+th.sortable:hover {
+  background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+}
+
+td {
+  color: #1f2937;
+  font-size: 15px;
+}
+
+/* Alternating Row Colors */
+.row-odd {
+  background-color: #ffffff;
+}
+
+.row-even {
+  background-color: #f8fafc;
+}
+
+/* Hover Effect */
+tr:hover {
+  background-color: #eff6ff;
+  transition: background-color 0.2s ease;
+}
+
+/* Role Badges */
+.role-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.role-admin {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.role-user {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.role-editor {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+/* Action Buttons */
+.btn {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.btn-edit:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.btn-delete {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-delete:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Sorting Icons */
+.sort-icon::before {
+  content: '↕';
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.sort-icon.asc::before {
+  content: '↑';
+  opacity: 1;
+}
+
+.sort-icon.desc::before {
+  content: '↓';
+  opacity: 1;
+}
+
+
+/* Responsive Adjustments */
+
+/* Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+    .search-container {
+        margin-bottom: 20px;
+    }
+
+    .search-input {
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+}
+
+/* Medium Screens (768px - 1199px) */
+@media (max-width: 1199px) {
+    .search-input {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Small Screens (600px - 767px) */
+@media (max-width: 767px) {
+    .search-container {
+        margin-bottom: 12px;
+    }
+
+    .search-input {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Mobile Screens (Below 600px) */
+@media (max-width: 599px) {
+    .search-container {
+        max-width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .search-input {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Extra Small Screens (Below 400px) */
+@media (max-width: 399px) {
+    .search-input {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Large Screens (1200px and up) */
+@media (min-width: 1200px) {
+  .table-container {
+      padding: 12px;
+  }
+
+  th, td {
+      padding: 16px 24px;
+      font-size: 16px;
+  }
+
+  .btn {
+      padding: 8px 16px;
+      font-size: 15px;
+  }
+
+  .role-badge {
+      padding: 5px 14px;
+      font-size: 14px;
+  }
+}
+
+/* Medium Screens (768px - 1199px) */
+@media (max-width: 1199px) {
+  th, td {
+      padding: 12px 16px;
+      font-size: 14px;
+  }
+
+  .btn {
+      padding: 5px 12px;
+      font-size: 13px;
+  }
+
+  .role-badge {
+      padding: 4px 10px;
+      font-size: 12px;
+  }
+}
+
+/* Small Screens (600px - 767px) */
+@media (max-width: 767px) {
+  th, td {
+      padding: 10px 12px;
+      font-size: 13px;
+  }
+
+  .btn {
+      padding: 4px 10px;
+      font-size: 12px;
+  }
+
+  .role-badge {
+      padding: 3px 8px;
+      font-size: 11px;
+  }
+}
+
+/* Mobile Screens (Below 600px) */
+@media (max-width: 599px) {
+  .table-container {
+      padding: 4px;
+  }
+
+  table {
+      display: block;
+      overflow-x: visible;
+  }
+
+  thead {
+      display: none; /* Hide headers on mobile */
+  }
+
+  tr {
+      display: block;
+      margin-bottom: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      font-size: 14px;
+      border-bottom: none;
+      position: relative;
+  }
+
+  td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #4b5563;
+      flex: 1;
+      text-transform: capitalize;
+  }
+
+  td:not(:last-child) {
+      border-bottom: 1px solid #e5e7eb;
+  }
+
+  .action-cell {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+  }
+
+  .action-cell::before {
+      content: none; /* Remove label for action cell */
+  }
+
+  .btn {
+      padding: 6px 12px;
+      font-size: 13px;
+      flex: 1;
+      max-width: 120px;
+      text-align: center;
+  }
+
+  .role-badge {
+      padding: 4px 10px;
+      font-size: 12px;
+  }
+
+  /* Disable hover effect on mobile */
+  tr:hover {
+      background-color: inherit;
+  }
+}
+
+/* Extra Small Screens (Below 400px) */
+@media (max-width: 399px) {
+  td {
+      padding: 10px 12px;
+      font-size: 13px;
+  }
+
+  .btn {
+      padding: 5px 10px;
+      font-size: 12px;
+      max-width: 100px;
+  }
+
+  .role-badge {
+      padding: 3px 8px;
+      font-size: 11px;
+  }
+}
