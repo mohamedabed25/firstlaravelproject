@@ -65,7 +65,7 @@
     
 
 <script>
-    // Pass Laravel-specific variables to JavaScript file for ajax handling  CreateUser.js
+    // Pass Laravel-specific variables to JavaScript file for ajax handling CreateUser.js
     window.usersSearchUrl = "{{ route('users.index') }}";
     window.usersStoreUrl = '{{ route('users.store') }}';
 </script>

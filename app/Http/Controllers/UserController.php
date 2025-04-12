@@ -89,20 +89,37 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view("users.edit", ['user' => $user]);
+        // return view("users.edit", ['user' => $user]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, user $user)
+    public function update(UserRequest $request, User $user)
     {
         $validated = $request->validated();
+    
+        // ✅ لو الباسورد مش فاضي، خليه يتحفظ مشفّر
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']); // لو فاضي متحدثش الباسورد
+        }
+    
+        // ✅ لو فيه صورة جديدة
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('users', 'public');
+        }
+    
         $user->update($validated);
-        return redirect()->route('users.index')->with('success', 'User added successfully!');    
-
+    
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'message' => 'User updated successfully!'
+        ]);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      */
