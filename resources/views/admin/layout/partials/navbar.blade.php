@@ -1,5 +1,5 @@
 {{-- <body class="layout-fixed sidebar-expand-lg bg-body-tertiary"> --}}
- 
+
       <!--begin::Header-->
       <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
@@ -187,7 +187,10 @@
                 <!--begin::Menu Footer-->
                 <li class="user-footer">
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  <a href="#" class="btn btn-default btn-flat float-end">Sign out</a>
+                  <form class="btn btn-default btn-flat float-end" method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button  type="submit">تسجيل الخروج</button>
+                </form>
                 </li>
                 <!--end::Menu Footer-->
               </ul>
@@ -199,5 +202,5 @@
         <!--end::Container-->
       </nav>
       <!--end::Header-->
-    
-    
+
+

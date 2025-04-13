@@ -1,41 +1,30 @@
-// this line is a function to open modal using the id defined in blade 
+// this line is a function to open modal using the id defined in blade
 function openModal() {
     $('#createUserModal').fadeIn();
 }
 
-// this line is a function to close modal using the id defined in blade 
+// this line is a function to close modal using the id defined in blade
 function closeModal() {
-    // اقفل المودال 
+    // اقفل المودال
     $('#createUserModal').fadeOut(300);
-    // امسح الداتا اللي فيه بعد تحويله من جي كويري اوبجكت  ل هتمل فورم 
-    $('#createUserForm')[0].reset();  
-    // اخف الصورة اللي فيها الملف اللي حطها المستخدم لو اتحطت 
+    // امسح الداتا اللي فيه بعد تحويله من جي كويري اوبجكت  ل هتمل فورم
+    $('#createUserForm')[0].reset();
+    // اخف الصورة اللي فيها الملف اللي حطها المستخدم لو اتحطت
     $('#photo-preview').hide();
-    // اخف الرسايل اللي فيها خطا قبل ما تفتح الفورم تاني 
+    // اخف الرسايل اللي فيها خطا قبل ما تفتح الفورم تاني
     $('.error-message').remove();
-    $('#modal-title').text('Create User');
-    $('#form-submit-btn').text('Create');
+
     $('#user_id').val('');
 
 }
 
 
 
-// EDIT modal
-function openEditModal() {
-    $('#editUserModal').fadeIn();
-}
-function closeEditModal() {
-    $('#editUserModal').fadeOut(300);
-    $('#editUserForm')[0].reset();
-    $('#edit_photo_preview').hide();
-    $('.error-message').remove();
-}
 
     $(document).on('click', '#createUserModal', function(event) {
         if ($(event.target).is('#createUserModal') ) {
             closeModal();
-            
+
         }
     });
 
@@ -43,67 +32,46 @@ function closeEditModal() {
         if (event.key === "Escape") {
             closeModal();
         }
-    }); 
+    });
 
 
 // استنى لحد ما الصفحة كلها تخلص تحميل (DOM جاهز)، وبعد كده نفذ اللي جوا.
-$(document).ready(function () {               
-    
+$(document).ready(function () {
+
     //  ده بيراقب النموذج (form) اللي الـ id بتاعه هو createUserForm.
     //  لما المستخدم يضغط على زر "Create" أو يعمل Submit، الكود اللي جوا هيشتغل.
     $('#createUserForm').on('submit', function (e) {
         // بيمنع المتصفح من السلوك الافتراضي للنموذج (اللي هو يبعته ويريفرش الصفحة).
         e.preventDefault();
-        // ده بينضف أي رسائل خطأ ظهرت قبل كده في الصفحة 
+        // ده بينضف أي رسائل خطأ ظهرت قبل كده في الصفحة
         $('.error-message').remove();
         // بننشئ كائن جديد من نوع FormData، وده بياخد البيانات كلها من النموذج
         var formData = new FormData(this);
 
         $.ajax({
-            url: window.usersStoreUrl, 
+            url: window.usersStoreUrl,
             type: 'POST',
             data: formData,
-            processData: false, // لا يقوم بتحويل البيانات إلى شكل سترنج وهو غير مناسب لارسال الصور 
-            contentType: false,  // خلّي المتصفح هو اللي يحدّد نوع البيانات عشان نعرف نهندل الفايلات 
+            processData: false, // لا يقوم بتحويل البيانات إلى شكل سترنج وهو غير مناسب لارسال الصور
+            contentType: false,  // خلّي المتصفح هو اللي يحدّد نوع البيانات عشان نعرف نهندل الفايلات
 
             // "لما السيرفر نفسه هو اللي يرد بنجاح، شغّل الكود ده، واديني البيانات اللي رجعت في المتغير response"
-            success: function (response) { 
-                // لما الكونتروللر بتاعك يرجع ترو في الريسبونس اعمل اللي جوا الفنكشن 
+            success: function (response) {
+                // لما الكونتروللر بتاعك يرجع ترو في الريسبونس اعمل اللي جوا الفنكشن
                 if (response.success) {
-                    //  اقفل المودال 
+                    //  اقفل المودال
                     closeModal();
-                    // اعرض بوب اب النجاح 
+                    fetchUsers(window.usersSearchUrl);
+
+                    // اعرض بوب اب النجاح
                     Swal.fire({
                         icon: 'success',
                         title: 'User Created Successfully!',
                         text: 'The new user has been added to the system.',
                         confirmButtonText: 'OK'
                     });
-                    // بنحول الفورم من جي كويري اوبجكت ل فورم هتمل اقدر اتعامل معاها وامسح الداتا اللي فيها 
-                    $('#createUserForm')[0].reset(); 
-
-                    // خزن مسار الصوره في المتغير فوتو لو الصوره اتبعتت ولو متبعتتش استخدم الديفولت 
-                    var photo = response.user.photo? `/storage/${response.user.photo}`: `dist/assets/img/avatar5.png`;
-                    // خزن الرول في متغير لو الرول موجود في الريسبونس استخدمه ولو  مش موجود استخدم الديفولت اللي هو يوزر 
-                    var role = response.user.role ?? 'User'; 
-
-                    var newUserRow = `
-                        <tr>
-                            <td>${response.user.id}</td>
-                            <td>${response.user.username}</td>
-                            <td>${response.user.email}</td>
-                            <td><img src="${photo}" alt="User Photo" width="50"></td>
-                            <td> <span class="role-badge role-${role}">${role}</span> </td>
-                            <td>
-                                <a href="#" class="btn btn-edit">Edit</a>
-                                <form action="/users/${response.user.id}" method="POST" class="inline" id="delete-user-form-${response.user.id}">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    `;
-                    $('#data-table tbody').prepend(newUserRow);
+                    // بنحول الفورم من جي كويري اوبجكت ل فورم هتمل اقدر اتعامل معاها وامسح الداتا اللي فيها
+                    $('#createUserForm')[0].reset();
                 }
                 else {
                     Swal.fire({
@@ -116,13 +84,13 @@ $(document).ready(function () {
             },
             // لو السيرفر رجّع رد فشل (status code 4xx أو 5xx مثلا) ,xhr هو كائن الـ XMLHttpRequest اللي فيه كل تفاصيل الخطأ
             error: function (xhr) {
-                // 422 ده الكود اللي Laravel بيرجعه لما الـ validation يفشل 
+                // 422 ده الكود اللي Laravel بيرجعه لما الـ validation يفشل
                 if (xhr.status === 422) {
                     //  ده كائن فيه كل الحقول اللي فيها أخطاء.
                     var errors = xhr.responseJSON.errors;
                     // عشان تحذف الرسايل اللي ظهرت قبل كده
                     $('.error-message').remove();
-                    // لووب عشان تعرض رسايل الخطا تحت كل خانه 
+                    // لووب عشان تعرض رسايل الخطا تحت كل خانه
                     $.each(errors, function (field, messages) {
                         var errorMessage = `<div class="error-message">${messages[0]}</div>`;
                         $('#' + field).after(errorMessage);
@@ -140,43 +108,59 @@ $(document).ready(function () {
     });
 
 
-    // For image preview
+    // For image preview in create modal
+    // اول ما المستخدم يجي يختار ويغير  صوره اعمل اللي جوا الفنكشن دي
     $('#photo').on('change', function (event) {
+        // يجيب اول صوره اختارها المستخدم ويحطها في المتغير ده
         const file = event.target.files[0];
+        // بيخزن العنصر  بال اي دي بتاعه  اللي الصوره دي هتتعرض فيه ويحطه في المتغير ده
         const preview = $('#photo-preview');
+        // لو الفايل عباره عن فايل والنوع بتاعه  صوره اعمل اللي جوا
 
-        if (file && file.type.startsWith('image/')) {
+            //  هنا بننشئ كائن جديد من FileReader
             const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.attr('src', e.target.result);
+            // بعد ما الريدر يخلص قرايه الفايل اعمل اللي جوا الفنكشن
+            reader.onload = function (ereader) {
+                // حط القيمه  اللي جايه من الريدر  في الصفه اللي اسمها src
+                preview.attr('src', ereader.target.result);
+                //  اظهر العنصر اللي هنعرض فيه الصوره
                 preview.show();
             };
+            // اعرض الصوره
             reader.readAsDataURL(file);
-        } else {
-            preview.hide();
-            preview.attr('src', '#');
-        }
+
+
     });
 });
 
 
 
 
-// for search and pagnation and serch work into all links 
+// for search and pagnation serch into all links
 
+
+
+// لما الصفحة تخلص تحميل بالكامل، ابدأ شغّل الكود اللي جوه
 $(document).ready(function () {
+    // كل مرة المستخدم يكتب حرف في مربع البحث (id="table-search")، يشتغل الحدث ده
     $('#table-search').on('keyup', function () {
+        // بنجيب النص اللي المستخدم كتبه في مربع البحث ونخزنه في متغير اسمه query
+        // this تعود علي العنصر اللي  اللي انا باعت الاي دي بتاعه
         let query = $(this).val();
+        // ابعت القيمه اللي اللي اتخزنت في الفايربل وابعتها للفنكشن fetchUsers
         fetchUsers(`${window.usersSearchUrl}?search=${query}`);
     });
 
+    // هنبعت اجاكس ريكويست للسيرفر ب اللينك والداتا اللي
     function fetchUsers(url) {
         $.ajax({
             url: url,
             type: 'GET',
+            // في حاله ان السيرفر رد بنجاح خد الداتا اللي راجعه من الكونترولر وحطها في users-data
             success: function (data) {
                 $('#users-data').html(data);
             },
+            //  في حالها الايرور اعرض الاخطاء في الكونسل عشان نعرف نتعامل معاها
             error: function (xhr, status, error) {
                 console.error("XHR:", xhr);
                 console.error("Status:", status);
@@ -184,16 +168,20 @@ $(document).ready(function () {
             }
         });
     }
-    
+
+    // عند الضغط علي اي a جوا ال pagnation  شغل اللي جوا الفنكشن
     $(document).on('click', '.pagination a', function (e) {
+        // تجنب الباجنيشن العادي عند الضغط علي اللينك
         e.preventDefault();
+        // خزن  القيمه اللي بتيجي من الخانه  table-search وحطها في المتغير ده
         let query = $('#table-search').val();
+        //  .attr('href')  معناها: هات قيمة الـ href بتاعة الرابط. وخزنها في المتغير ده
         let pageUrl = $(this).attr('href');
 
         if (query.length > 0) {
             pageUrl += `&search=${query}`;
         }
-
+        //  pageUrl شغل الفنكشن اللي بتبعت اجاكس ريكويست للسيرفر علي ال بالسيرش اللي المستخدم كتبه
         fetchUsers(pageUrl);
     });
 
@@ -201,124 +189,54 @@ $(document).ready(function () {
 });
 
 
+//  FOR DELETE USER USING AJAX
+$(document).off('submit', '.delete-form').on('submit', '.delete-form', function (e) {
+    e.preventDefault(); // امنع الإرسال التقليدي
 
-// for edit user
-// لما المستخدم يضغط على زر Edit
-$(document).on('click', '.btn-edit', function (e) {
-    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This user will be deleted permanently!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let form = $(this);
+            let url = form.attr('action'); // الرابط من action في الفورم
+            let row = form.closest('tr');  // صف الجدول
 
-    // عبّي البيانات من الزر داخل المودال
-    $('#edit_user_id').val($(this).data('id'));
-    $('#edit_username').val($(this).data('username'));
-    $('#edit_email').val($(this).data('email'));
-    $('#edit_role').val($(this).data('role'));
-    $('#edit_password').val(''); // بنسيب الباسورد فاضي دايمًا
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    _method: 'DELETE',
+                    _token: form.find('input[name="_token"]').val()
+                },
+                success: function (response) {
+                    // إزالة الصف من الجدول
+                    row.remove();
 
-    // الصورة
-    const photo = $(this).data('photo');
-    $('#edit_photo_preview').attr('src', photo).show();
-
-    // افتح المودال
-    openEditModal();
-});
-
-
-$('#editUserForm').on('submit', function (e) {
-    e.preventDefault();
-    $('.error-message').remove();
-
-    var formData = new FormData(this);
-    let userId = $('#edit_user_id').val();
-    let url = `/users/${userId}`;
-
-    formData.append('_method', 'PUT');
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            if (response.success) {
-                closeEditModal();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'User Updated Successfully!',
-                    text: 'The user information has been updated.',
-                    confirmButtonText: 'OK'
-                });
-
-                // جهز الصورة والرول
-                var photo = response.user.photo ? `/storage/${response.user.photo}` : `dist/assets/img/avatar5.png`;
-                var role = response.user.role ?? 'User';
-
-                var updatedRow = `
-                    <tr>
-                        <td>${response.user.id}</td>
-                        <td>${response.user.username}</td>
-                        <td>${response.user.email}</td>
-                        <td><img src="${photo}" width="50"></td>
-                        <td><span class="role-badge role-${role}">${role}</span></td>
-                        <td>
-                            <a href="#" class="btn btn-edit"
-                               data-id="${response.user.id}"
-                               data-username="${response.user.username}"
-                               data-email="${response.user.email}"
-                               data-role="${role}"
-                               data-photo="${photo}">
-                               Edit
-                            </a>
-                            <form action="/users/${response.user.id}" method="POST" class="inline">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                    </tr>
-                `;
-
-                // استبدل الصف القديم بالجديد
-                $('#data-table tbody tr').each(function () {
-                    if ($(this).find('td:first').text() == userId) {
-                        $(this).replaceWith(updatedRow);
-                    }
-                });
-            }
-        },
-        error: function (xhr) {
-            if (xhr.status === 422) {
-                var errors = xhr.responseJSON.errors;
-                $.each(errors, function (field, messages) {
-                    var errorMessage = `<div class="error-message">${messages[0]}</div>`;
-                    $('#edit_' + field).after(errorMessage);
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    confirmButtonText: 'OK'
-                });
-            }
+                    // عرض إشعار النجاح
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted Successfully',
+                        text: 'The user has been removed from the list.',
+                        confirmButtonText: 'OK'
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'An Error Occurred',
+                        text: 'The user could not be deleted. Please try again.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
         }
     });
-});
 
 
 
-$('#edit_photo').on('change', function (event) {
-    const file = event.target.files[0];
-    const preview = $('#edit_photo_preview');
-
-    if (file && file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            preview.attr('src', e.target.result);
-            preview.show();
-        };
-        reader.readAsDataURL(file);
-    } else {
-        preview.hide();
-        preview.attr('src', '#');
-    }
 });
